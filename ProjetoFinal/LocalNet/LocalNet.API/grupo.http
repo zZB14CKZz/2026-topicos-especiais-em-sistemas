@@ -1,25 +1,30 @@
 ### Testar raiz
 GET http://localhost:8080
-/api/grupo/buscar/
-  ### Listar Grupo
+
+### Listar Grupo
 GET http://localhost:8080/api/grupo
 
 ### Cadastrar Grupo
 POST http://localhost:8080/api/grupo/cadastrar
-Content-Type: application/json
+Content-Type: application/json 
 
+{
+    "nome" : "GRUPO",
+    "descricao" : "Descrição do grupo"
+}
 ### Buscar Grupo
-GET http://localhost:8080/api/grupo/buscar/{grupoId}
+GET http://localhost:8080/api/grupo/buscar/d1e5f9c7-8ec3-419d-9aa6-1cc9f2d56da8
 
 ### Entrar em um Grupo
 POST http://localhost:8080/api/usuario/entrar-grupo
 Content-Type: application/json
 
-### Deletar Grupo 
-DELETE http://localhost:8080/api/grupo/deletar/{id}
-
-
 {
-    "usuarioId" : "COLE_O_ID_AQUI",
-    "grupoId" : "COLE_O_ID_DO_GRUPO_AQUI"
+    "usuarioId" : "e9a384af-f94d-4489-b864-6a2fbcb72f6a",
+    "grupoId" : "d1e5f9c7-8ec3-419d-9aa6-1cc9f2d56da8"
 }
+### Deletar Grupo 
+DELETE http://localhost:8080/api/grupo/deletar/d1e5f9c7-8ec3-419d-9aa6-1cc9f2d56da8
+
+
+
