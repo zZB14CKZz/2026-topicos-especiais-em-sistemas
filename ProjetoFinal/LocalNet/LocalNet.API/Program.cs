@@ -157,6 +157,13 @@ app.MapGet("/api/grupo/buscar/{grupoId}", ([FromServices] AppDataContext ctx, [F
 
 app.MapPost("/api/grupo/cadastrar", ([FromServices] AppDataContext ctx, [FromBody] Grupo grupo) =>
 {
+    foreach (Grupo g in ctx.Grupos.ToList())
+    {
+        if (g.Nome == grupo.Nome)
+        {
+            return Results.BadRequest("Já existe um grupo com esse nome.");
+        }
+    }
     ctx.Grupos.Add(grupo);
     ctx.SaveChanges();
 
