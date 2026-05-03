@@ -1,6 +1,7 @@
 using LocalNet.API.Data;
 using LocalNet.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -157,6 +158,14 @@ app.MapGet("/api/grupo/buscar/{grupoId}", ([FromServices] AppDataContext ctx, [F
 
 app.MapPost("/api/grupo/cadastrar", ([FromServices] AppDataContext ctx, [FromBody] Grupo grupo) =>
 {
+    foreach (Grupo g in ctx.Grupos.ToList())
+    {
+        if (g.Nome == grupo.Nome)
+        {
+            return Results.BadRequest("Já existe um grupo com esse nome.");
+        }
+    }
+
     ctx.Grupos.Add(grupo);
     ctx.SaveChanges();
 
@@ -164,7 +173,7 @@ app.MapPost("/api/grupo/cadastrar", ([FromServices] AppDataContext ctx, [FromBod
 });
 
 
-app.MapPut("/api/usuario/atualizar/{id}", ([FromBody] Grupo grupoAtualizado, [FromServices] AppDataContext ctx, [FromRoute] string id) =>
+app.MapPut("/api/grupo/atualizar/{id}", ([FromBody] Grupo grupoAtualizado, [FromServices] AppDataContext ctx, [FromRoute] string id) =>
 {
     foreach (Grupo u in ctx.Grupos.ToList())
     {
@@ -196,4 +205,31 @@ app.MapDelete("/api/grupo/deletar/{id}", ([FromServices] AppDataContext ctx, [Fr
     }
     return Results.NotFound("Grupo não encontrado.");
 });
+
+app.MapGet("/api/usuario/listar-por-grupo/{grupoId}", ([FromRoute] string grupoId, [FromServices] AppDataContext ctx) =>
+{
+    ArrayList usuariosDoGrupo = new ArrayList();
+
+    foreach(UsuarioGrupo ligacao in ctx.UsuarioGrupos.ToList())
+    {
+        if(ligacao.GrupoId == grupoId)
+        {
+            usuariosDoGrupo.Add(ligacao.UsuarioId);
+        }
+    }
+
+    foreach (string usuarioId in usuariosDoGrupo)
+    {
+        foreach (Usuario u in ctx.Usuarios.ToList())
+        {
+            if (u.Id == usuarioId)
+            {
+                return Results.Ok(u);
+            }
+        }
+    }
+
+    return Results.NotFound("Nenhum usuário encontrado para este grupo.");
+});
+
 app.Run();
