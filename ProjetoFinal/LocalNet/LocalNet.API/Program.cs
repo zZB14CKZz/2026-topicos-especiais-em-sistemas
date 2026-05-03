@@ -34,10 +34,19 @@ app.MapGet("/api/usuario/buscar/{id}", ([FromServices] AppDataContext ctx, [From
 });
 
 app.MapPost("/api/usuario/cadastrar", ([FromServices] AppDataContext ctx, [FromBody] Usuario usuario) =>
+
 {
+    foreach (Usuario u in ctx.Usuarios.ToList())
+    {
+        if (u.Nome == usuario.Nome)
+        {
+            return Results.BadRequest("Já existe um usuário com esse nome.");
+        }
+    }
+
     ctx.Usuarios.Add(usuario);
     ctx.SaveChanges();
-    return Results.Created(usuario);
+    return Results.Created("", usuario);
 });
 
 app.MapPut("/api/usuario/atualizar/{id}", ([FromBody] Usuario usuarioAtualizado, [FromServices] AppDataContext ctx, [FromRoute] string id) =>
@@ -77,7 +86,7 @@ app.MapPost("/api/usuario/entrar-grupo", ([FromServices] AppDataContext ctx, [Fr
 {
     ctx.UsuarioGrupos.Add(ligacao);
     ctx.SaveChanges();
-    return Results.Created(ligacao);
+    return Results.Created("", ligacao);
 });
 
 app.MapGet("/api/mensagem/listar/{grupoId}", ([FromServices] AppDataContext ctx, [FromRoute] string grupoId) =>
@@ -165,11 +174,11 @@ app.MapPost("/api/grupo/cadastrar", ([FromServices] AppDataContext ctx, [FromBod
             return Results.BadRequest("Já existe um grupo com esse nome.");
         }
     }
-
+    
     ctx.Grupos.Add(grupo);
     ctx.SaveChanges();
 
-    return Results.Created(grupo);
+    return Results.Created("", grupo);
 });
 
 
