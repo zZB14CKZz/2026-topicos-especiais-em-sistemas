@@ -9,6 +9,6 @@ public class Mensagem
     public string UsuarioId { get; set; }
     public string GrupoId { get; set; }
     public string? Text { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
-    public DateTime UpdatedAt { get; set; }
+    public DateTime CriadoEm { get; set; } = DateTime.Now;
+    public DateTime AtualizadoEm { get; set; }
 }

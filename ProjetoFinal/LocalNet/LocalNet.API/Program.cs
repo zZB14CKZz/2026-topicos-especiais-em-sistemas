@@ -4,42 +4,27 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adicionando o contexto do banco de dados
 builder.Services.AddDbContext<AppDataContext>();
 
 var app = builder.Build();
 
 app.MapGet("/", () => "API do LocalNet Messenger - Módulo de Usuários!");
 
-// POST: Cadastrar Usuário
-app.MapPost("/api/usuario/cadastrar", 
-    ([FromBody] Usuario usuario, 
-    [FromServices] AppDataContext ctx) =>
+app.MapGet("/api/usuario/listar", ([FromServices] AppDataContext ctx) =>
 {
-    ctx.Usuarios.Add(usuario);
-    ctx.SaveChanges();
-    return Results.Created("", usuario);
-});
-
-// GET: Listar Usuários
-app.MapGet("/api/usuario/listar", 
-    ([FromServices] AppDataContext ctx) =>
-{
-    if(ctx.Usuarios.Any())
+    if (ctx.Usuarios.Any())
     {
         return Results.Ok(ctx.Usuarios.ToList());
     }
+
     return Results.NotFound("Nenhum usuário cadastrado.");
 });
 
-// GET: Buscar Usuário por ID
-app.MapGet("/api/usuario/buscar/{id}", 
-    ([FromRoute] string id,
-    [FromServices] AppDataContext ctx) =>
+app.MapGet("/api/usuario/buscar/{id}", ([FromServices] AppDataContext ctx, [FromRoute] string id) =>
 {
-    foreach(Usuario u in ctx.Usuarios.ToList())
+    foreach (Usuario u in ctx.Usuarios.ToList())
     {
-        if(u.Id == id)
+        if (u.Id == id)
         {
             return Results.Ok(u);
         }
@@ -47,20 +32,24 @@ app.MapGet("/api/usuario/buscar/{id}",
     return Results.NotFound("Usuário não encontrado.");
 });
 
-// PUT: Atualizar Usuário
-app.MapPut("/api/usuario/atualizar/{id}", 
-    ([FromRoute] string id,
-    [FromBody] Usuario usuarioAtualizado,
-    [FromServices] AppDataContext ctx) =>
+app.MapPost("/api/usuario/cadastrar", ([FromServices] AppDataContext ctx, [FromBody] Usuario usuario) =>
 {
-    foreach(Usuario u in ctx.Usuarios.ToList())
+    ctx.Usuarios.Add(usuario);
+    ctx.SaveChanges();
+    return Results.Created(usuario);
+});
+
+app.MapPut("/api/usuario/atualizar/{id}", ([FromBody] Usuario usuarioAtualizado, [FromServices] AppDataContext ctx, [FromRoute] string id) =>
+{
+    foreach (Usuario u in ctx.Usuarios.ToList())
     {
-        if(u.Id == id)
+        if (u.Id == id)
         {
             u.Nome = usuarioAtualizado.Nome;
             u.Email = usuarioAtualizado.Email;
             u.Telefone = usuarioAtualizado.Telefone;
-            
+            u.AtualizadoEm = DateTime.Now;
+
             ctx.Usuarios.Update(u);
             ctx.SaveChanges();
             return Results.Ok(u);
@@ -69,14 +58,11 @@ app.MapPut("/api/usuario/atualizar/{id}",
     return Results.NotFound("Usuário não encontrado.");
 });
 
-// DELETE: Deletar Usuário
-app.MapDelete("/api/usuario/deletar/{id}", 
-    ([FromRoute] string id,
-    [FromServices] AppDataContext ctx) =>
+app.MapDelete("/api/usuario/deletar/{id}", ([FromServices] AppDataContext ctx, [FromRoute] string id) =>
 {
-    foreach(Usuario u in ctx.Usuarios.ToList())
+    foreach (Usuario u in ctx.Usuarios.ToList())
     {
-        if(u.Id == id)
+        if (u.Id == id)
         {
             ctx.Usuarios.Remove(u);
             ctx.SaveChanges();
@@ -86,14 +72,63 @@ app.MapDelete("/api/usuario/deletar/{id}",
     return Results.NotFound("Usuário não encontrado.");
 });
 
-// EXTRA: Entrar no grupo
-app.MapPost("/api/usuario/entrar-grupo", 
-    ([FromBody] UsuarioGrupo ligacao, 
-    [FromServices] AppDataContext ctx) =>
+app.MapPost("/api/usuario/entrar-grupo", ([FromServices] AppDataContext ctx, [FromBody] UsuarioGrupo ligacao) =>
 {
     ctx.UsuarioGrupos.Add(ligacao);
     ctx.SaveChanges();
-    return Results.Created("", ligacao);
+    return Results.Created(ligacao);
+});
+
+app.MapGet("/api/mensagem/listar/{grupoId}", ([FromServices] AppDataContext ctx, [FromRoute] string grupoId) =>
+{
+
+    foreach (Mensagem m in ctx.Mensagens.ToList())
+    {
+        if (m.GrupoId == grupoId)
+        {
+            return Results.Ok(m);
+        }
+    }
+    return Results.NotFound("Nenhuma mensagem encontrada");
+});
+
+app.MapPost("/api/mensagem/cadastrar", ([FromServices] AppDataContext ctx, [FromBody] Mensagem mensagem) =>
+{
+    ctx.Mensagens.Add(mensagem);
+    ctx.SaveChanges();
+    return Results.Created();
+});
+
+app.MapPut("/api/mensagem/atualizar/{mensagemId}", ([FromServices] AppDataContext ctx, [FromBody] Mensagem mensagem, [FromRoute] string mensagemId) =>
+{
+
+    foreach (Mensagem m in ctx.Mensagens.ToList())
+    {
+        if (m.Id == mensagemId)
+        {
+            m.Text = mensagem.Text;
+            m.AtualizadoEm = DateTime.Now;
+
+            ctx.Mensagens.Update(m);
+            ctx.SaveChanges();
+            return Results.Ok(m);
+        }
+    }
+    return Results.NotFound("Mensagem não encontrada");
+});
+
+app.MapDelete("/api/mensagem/deletar/{mensagemId}", ([FromServices] AppDataContext ctx, [FromRoute] string mensagemId) =>
+{
+    foreach (Mensagem m in ctx.Mensagens.ToList())
+    {
+        if (m.Id == mensagemId)
+        {
+            ctx.Mensagens.Remove(m);
+            ctx.SaveChanges();
+            return Results.Ok("Mensagem deletada.");
+        }
+    }
+    return Results.NotFound("Mensagem não encontrada");
 });
 
 app.Run();
