@@ -20,11 +20,8 @@ POST http://localhost:8080/api/usuario/entrar-grupo
 Content-Type: application/json
 
 {
-    "usuarioId" : "e9a384af-f94d-4489-b864-6a2fbcb72f6a",
-    "grupoId" : "d1e5f9c7-8ec3-419d-9aa6-1cc9f2d56da8"
+    "usuarioId" : "a2355473-0962-45ea-b830-8540273cc14a",
+    "grupoId" : "a18199df-20f9-492b-a31e-bee0b69815e0"
 }
 ### Deletar Grupo 
 DELETE http://localhost:8080/api/grupo/deletar/d1e5f9c7-8ec3-419d-9aa6-1cc9f2d56da8
-
-
-

@@ -25,3 +25,6 @@ Content-Type: application/json
     "usuarioId" : "COLE_O_ID_AQUI",
     "grupoId" : "COLE_O_ID_DO_GRUPO_AQUI"
 }
+
+### Listar usuários por grupo
+GET http://localhost:8080/api/usuario/listar-por-grupo/a18199df-20f9-492b-a31e-bee0b69815e0
