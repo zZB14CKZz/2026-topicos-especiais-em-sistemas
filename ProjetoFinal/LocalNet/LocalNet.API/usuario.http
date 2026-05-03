@@ -15,7 +15,7 @@ Content-Type: application/json
 }
 
 ### Buscar usuário
-GET http://localhost:8080/api/usuario/buscar/COLE_O_ID_AQUI
+GET http://localhost:8080/api/usuario/buscar/5bef63cb-1be6-4b30-b1f2-84a1df4e0fbf
 
 ### Entrar em um grupo
 POST http://localhost:8080/api/usuario/entrar-grupo

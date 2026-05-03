@@ -45,7 +45,7 @@ app.MapPost("/api/usuario/cadastrar", ([FromServices] AppDataContext ctx, [FromB
 
     ctx.Usuarios.Add(usuario);
     ctx.SaveChanges();
-    return Results.Created(usuario);
+    return Results.Created("", usuario);
 });
 
 app.MapPut("/api/usuario/atualizar/{id}", ([FromBody] Usuario usuarioAtualizado, [FromServices] AppDataContext ctx, [FromRoute] string id) =>
@@ -85,7 +85,7 @@ app.MapPost("/api/usuario/entrar-grupo", ([FromServices] AppDataContext ctx, [Fr
 {
     ctx.UsuarioGrupos.Add(ligacao);
     ctx.SaveChanges();
-    return Results.Created(ligacao);
+    return Results.Created("", ligacao);
 });
 
 app.MapGet("/api/mensagem/listar/{grupoId}", ([FromServices] AppDataContext ctx, [FromRoute] string grupoId) =>
@@ -176,7 +176,7 @@ app.MapPost("/api/grupo/cadastrar", ([FromServices] AppDataContext ctx, [FromBod
     ctx.Grupos.Add(grupo);
     ctx.SaveChanges();
 
-    return Results.Created(grupo);
+    return Results.Created("", grupo);
 });
 
 
