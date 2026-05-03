@@ -33,7 +33,16 @@ app.MapGet("/api/usuario/buscar/{id}", ([FromServices] AppDataContext ctx, [From
 });
 
 app.MapPost("/api/usuario/cadastrar", ([FromServices] AppDataContext ctx, [FromBody] Usuario usuario) =>
+
 {
+    foreach (Usuario u in ctx.Usuarios.ToList())
+    {
+        if (u.Nome == usuario.Nome)
+        {
+            return Results.BadRequest("Já existe um usuário com esse nome.");
+        }
+    }
+
     ctx.Usuarios.Add(usuario);
     ctx.SaveChanges();
     return Results.Created(usuario);

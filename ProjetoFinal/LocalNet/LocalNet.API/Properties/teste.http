@@ -1,11 +1,11 @@
 ### Testar raiz
-GET http://localhost:5000
+GET http://localhost:8080
 
 ### Listar usuários
-GET http://localhost:5000/api/usuario/listar
+GET http://localhost:8080/api/usuario/listar
 
 ### Cadastrar usuário
-POST http://localhost:5000/api/usuario/cadastrar
+POST http://localhost:8080/api/usuario/cadastrar
 Content-Type: application/json
 
 {
@@ -15,10 +15,10 @@ Content-Type: application/json
 }
 
 ### Buscar usuário
-GET http://localhost:5000/api/usuario/buscar/COLE_O_ID_AQUI
+GET http://localhost:8080/api/usuario/buscar/COLE_O_ID_AQUI
 
 ### Entrar em um grupo
-POST http://localhost:5000/api/usuario/entrar-grupo
+POST http://localhost:8080/api/usuario/entrar-grupo
 Content-Type: application/json
 
 {
