@@ -1,0 +1,27 @@
+### Testar raiz
+GET http://localhost:5000
+
+### Listar usuários
+GET http://localhost:5000/api/usuario/listar
+
+### Cadastrar usuário
+POST http://localhost:5000/api/usuario/cadastrar
+Content-Type: application/json
+
+{
+    "nome" : "Othon",
+    "email" : "othon@email.com",
+    "telefone" : "4199999999"
+}
+
+### Buscar usuário
+GET http://localhost:5000/api/usuario/buscar/COLE_O_ID_AQUI
+
+### Entrar em um grupo
+POST http://localhost:5000/api/usuario/entrar-grupo
+Content-Type: application/json
+
+{
+    "usuarioId" : "COLE_O_ID_AQUI",
+    "grupoId" : "COLE_O_ID_DO_GRUPO_AQUI"
+}
