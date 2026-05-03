@@ -130,5 +130,70 @@ app.MapDelete("/api/mensagem/deletar/{mensagemId}", ([FromServices] AppDataConte
     }
     return Results.NotFound("Mensagem não encontrada");
 });
+app.MapGet("/api/grupo", ([FromServices] AppDataContext ctx) =>
+{
+    var grupos = ctx.Grupos.ToList();
 
+    if (grupos.Any())
+    {
+        return Results.Ok(grupos);
+    }
+    return Results.NotFound("Nenhum grupo encontrado");
+});
+
+app.MapGet("/api/grupo/buscar/{grupoId}", ([FromServices] AppDataContext ctx, [FromRoute] string grupoId) =>
+{
+   foreach (Grupo g in ctx.Grupos.ToList())
+    {
+        if (g.Id == grupoId)
+        {
+            return Results.Ok(g);
+        }
+        
+    }
+    return Results.NotFound("Grupo não encotrado! ");
+});
+
+
+app.MapPost("/api/grupo/cadastrar", ([FromServices] AppDataContext ctx, [FromBody] Grupo grupo) =>
+{
+    ctx.Grupos.Add(grupo);
+    ctx.SaveChanges();
+
+    return Results.Created(grupo);
+});
+
+
+app.MapPut("/api/usuario/atualizar/{id}", ([FromBody] Grupo grupoAtualizado, [FromServices] AppDataContext ctx, [FromRoute] string id) =>
+{
+    foreach (Grupo u in ctx.Grupos.ToList())
+    {
+        if (u.Id == id)
+        {
+            u.Nome = grupoAtualizado.Nome;
+            u.Descricao = grupoAtualizado.Descricao;
+            
+            u.AtualizadoEm = DateTime.Now;
+
+            ctx.Grupos.Update(u);
+            ctx.SaveChanges();
+            return Results.Ok(u);
+        }
+    }
+    return Results.NotFound("Grupo não encontrado.");
+});
+
+app.MapDelete("/api/grupo/deletar/{id}", ([FromServices] AppDataContext ctx, [FromRoute] string id) =>
+{
+    foreach (Grupo u in ctx.Grupos.ToList())
+    {
+        if (u.Id == id)
+        {
+            ctx.Grupos.Remove(u);
+            ctx.SaveChanges();
+            return Results.Ok("grupo deletado.");
+        }
+    }
+    return Results.NotFound("Grupo não encontrado.");
+});
 app.Run();
